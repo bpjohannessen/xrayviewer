@@ -66,7 +66,7 @@ echo "<table style='border: 1px solid black; width: 1400px;'>";
 $key = 1;
 
 foreach($folders as $folder) {
-    $scanfile = array_diff(scandir($src.$folder), array('..', '.'));
+    $scanfile = array_diff(scandir($src.$folder), array('..', '.', 'desc.txt'));
     $fo = fopen($src.$folder."/desc.txt", "r");
         $fr = fread($fo, filesize($src.$folder."/desc.txt"));
         fclose($fo);
