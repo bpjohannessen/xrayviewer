@@ -67,13 +67,20 @@ $key = 1;
 
 foreach($folders as $folder) {
     $scanfile = array_diff(scandir($src.$folder), array('..', '.'));
+    $fo = fopen($src.$folder."/desc.txt", "r");
+        $fr = fread($fo, filesize($src.$folder."/desc.txt"));
+        fclose($fo);
 
     echo "<tr><td colspan='2' style='border-bottom: 2px solid black; border-top: 2px solid black;'>";
 
     if(@$_GET["hidden"]==1) {
-        $header = "<a href='#' onclick='$(hiddenText".$key.").show(); return false;'>".$key."</a><span style=\"display: none;\" id=\"hiddenText".$key."\"> ".$folder."</span>";
+        $header = "<a href='#' onclick='$(hiddenText".$key.").show(); return false;'>".$key."</a><span style=\"display: none;\" id=\"hiddenText".$key."\"> - ".$fr."</span>";
     } else {
-        $header = $folder;
+        
+        $header = $folder." - ".$fr;
+
+
+        //$header = $folder;
     }
 
     echo "<h3 id='".$key."'>".$header."</h3>";
