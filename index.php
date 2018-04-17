@@ -21,6 +21,24 @@ if(!isset($_SESSION['hasVisited'])){
     fwrite($f, $counterVal);
     fclose($f);
 }
+
+// Set variables for different courses and stuff
+// Should probably be re-coded
+
+if(@$_GET["course"]=="pneumo") {
+    $src = "./src/thorax/";
+    $hide = "?course=pneumo&amp;hidden=1";
+    $reveal = "?course=pneumo";
+    $otherCourse = "Orthopedics";
+    $otherCourseLink = "?";
+} else {
+    $src = "./src/ortho/";
+    $hide = "?hidden=1";
+    $reveal = "?hidden=0";
+    $otherCourse = "Pneumology";
+    $otherCourseLink = "?course=pneumo";
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,12 +106,15 @@ $(document).ready(function() {
         <div class="ten columns">
             <h4>FETTENAJS X-ray viewer</h4>
             <p style="font-weight: bold;">Please be advised: It may take some time to load this page (65.5 MB).</p>
+            
+            <?php echo "<p>Select another course: <a href='".$otherCourseLink."'>".$otherCourse."</a></p>"; ?>
+            </p>
             <p>PRO TIP #1: Click on the images for zoom and gallery function.</p>
             <?php
             if(@$_GET["hidden"]==0) {
-                echo "<p>PRO TIP #2: <a href='?hidden=1'>Remove the diagnosis to the cases</a></p>";
+                echo "<p>PRO TIP #2: <a href='".$hide."'>Remove the diagnosis to the cases</a></p>";
             } else {
-                echo "<p>PRO TIP #2: <a href='?hidden=0'>Show the diagnoses to the cases</a><br>";
+                echo "<p>PRO TIP #2: <a href='".$reveal."'>Show the diagnoses to the cases</a><br>";
                 echo "PRO TIP #3: Click on the case #number to show the diagnosis</p>";
             }
             ?>
@@ -105,7 +126,6 @@ $(document).ready(function() {
 
 <?php
 
-$src = "./src/";
 $folders = array_diff(scandir($src), array('..', '.'));
 sort($folders, SORT_NUMERIC);
 
