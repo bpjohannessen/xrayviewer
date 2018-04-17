@@ -21,47 +21,95 @@ if(!isset($_SESSION['hasVisited'])){
     fwrite($f, $counterVal);
     fclose($f);
 }
-
-//echo "You are visitor number $counterVal to this site";
-
 ?>
-<!doctype html>
-<html>
-<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>FETTENAJS XRAY VIEWER</title>
-    <style type="text/css">
 
-        * {
-            font-family: Verdana;
-        }
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>FETTENAJS X-ray viewer</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-        div {
-            display: none;
-        }
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js">
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
-    </script>
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/magnific-popup.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  
+  <!-- JS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="js/magnificpopup.js"></script>
+  <script>
+$(document).ready(function() {
+    $('.popup-gallery').each(function() {
+    $(this).magnificPopup({
+		delegate: 'a',
+		type: 'image',
+		tLoading: 'Loading image #%curr%...',
+		mainClass: 'mfp-img-mobile',
+		gallery: {
+			enabled: true,
+			navigateByImgClick: true,
+			preload: [0,1] // Will preload 0 - before current, and 1 after the current image
+		},
+		image: {
+			tError: '<a href="%url%">The image #%curr%</a> could not be loaded.',
+			titleSrc: function(item) {
+				return item.el.attr('title') + '<small>FETTENAJS X-ray viewer</small>';
+			}
+		}
+    });
+});
+});
+
+</script>
+
 </head>
-<body style="width: 1440px;">
-<center>Please be advised: It may take some time to load this page (65.5 MB)</center>
+<body>
+<div class="container" style="margin-top: 20px;">
+    <div class="row">
+        <div class="two columns"></div>
+        <div class="ten columns">
+            <h4>FETTENAJS X-ray viewer</h4>
+            <p style="font-weight: bold;">Please be advised: It may take some time to load this page (65.5 MB).</p>
+            <p>PRO TIP #1: Click on the images for zoom and gallery function.</p>
+            <?php
+            if(@$_GET["hidden"]==0) {
+                echo "<p>PRO TIP #2: <a href='?hidden=1'>Remove the diagnosis to the cases</a></p>";
+            } else {
+                echo "<p>PRO TIP #2: <a href='?hidden=0'>Show the diagnoses to the cases</a><br>";
+                echo "PRO TIP #3: Click on the case #number to show the diagnosis</p>";
+            }
+            ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="two columns"></div>
+        <div class="ten columns">
+
 <?php
-/**
- * Created by PhpStorm.
- * User: bp
- * Date: 13.11.2016
- * Time: 22.05
- */
 
 $src = "./src/";
-
 $folders = array_diff(scandir($src), array('..', '.'));
-
 sort($folders, SORT_NUMERIC);
 
-echo "<table style='border: 1px solid black; width: 1400px;'>";
+echo "<table>";
 
 $key = 1;
 
@@ -70,45 +118,48 @@ foreach($folders as $folder) {
     $fo = fopen($src.$folder."/desc.txt", "r");
         $fr = fread($fo, filesize($src.$folder."/desc.txt"));
         fclose($fo);
-
-    echo "<tr><td colspan='2' style='border-bottom: 2px solid black; border-top: 2px solid black;'>";
+    echo "<thead>";
+    echo "<tr><th colspan='2'>";
 
     if(@$_GET["hidden"]==1) {
-        $header = "<a href='#' onclick='$(hiddenText".$key.").show(); return false;'>".$key."</a><span style=\"display: none;\" id=\"hiddenText".$key."\"> - ".$fr."</span>";
+        $header = "<a href='#' onclick='$(hiddenText".$key.").show(); return false;'>#".$key."</a><span style=\"display: none;\" id=\"hiddenText".$key."\"> - ".$fr."</span>";
+        $imgTitle = "CASE #".$folder;
     } else {
-        
-        $header = $folder." - ".$fr;
-
-
-        //$header = $folder;
+        $header = "#".$folder." - ".$fr;
+        $imgTitle = "CASE #".$folder." - ".$fr;
     }
 
-    echo "<h3 id='".$key."'>".$header."</h3>";
-    echo "</td></tr>";
-    echo "<tr><td style='padding-bottom: 20px;'>";
+    echo "<h5 id='".$key."'>".$header."</h5>";
+    echo "</th></tr>";
+    echo "</thead>";
+
+    echo "<tbody class='popup-gallery'>";
+    echo "<tr>";
+
+    $x = count($scanfile);
+    $y = $x;
 
     foreach($scanfile as $file) {
 
+        $countXrays = count($scanfile);
 
         // File and new size
         $filename = $src.$folder."/".$file;
-        $percent = 0.2;
 
-        list($width, $height) = getimagesize($filename);
-
-        if($width > 600) {
-            $newwidth = $width * $percent;
-            $newheight = $height * $percent;
+        echo "<td>";
+  
+        echo "<a href='".$filename."' title='".$imgTitle."'><img src='".$src.$folder."/".$file."' style='width: 100%; height: auto;'></a>";
+        $y = $y - 1;
+        if($y % 2 == 0) {
+            echo "</td></tr>";
+            if($y != 0) echo "<tr>";
         } else {
-            $newheight = $height;
-            $newwidth = $width;
+            echo "</td>";
         }
 
-        echo "<a href='".$filename."'><img src='".$src.$folder."/".$file."' height='".$newheight."'></a>";
-
     }
-    echo "</td></tr>";
-    //echo "<br>";
+
+    echo "</tbody>";
     $key++;
 
 }
@@ -116,5 +167,9 @@ foreach($folders as $folder) {
 echo "</table>";
 
 ?>
+
+</div>
+</div>
+</div>
 </body>
 </html>
