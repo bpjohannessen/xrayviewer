@@ -50,11 +50,11 @@ if(!isset($_SESSION['hasVisited'])){
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="images/favicon.png">
-  
+
   <!-- JS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="js/magnificpopup.js"></script>
+  <script src="js/magnific-popup.js"></script>
   <script>
 $(document).ready(function() {
     $('.popup-gallery').each(function() {
