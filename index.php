@@ -29,14 +29,28 @@ if(@$_GET["course"]=="pneumo") {
     $src = "./src/thorax/";
     $hide = "?course=pneumo&amp;hidden=1";
     $reveal = "?course=pneumo";
-    $otherCourse = "Orthopedics";
-    $otherCourseLink = "?";
+    $_1Course = "Orthopedics";
+    $_1CourseLink = "?";
+    $_2Course = "Pediatric surgery";
+    $_2CourseLink = "?course=pedsurg";
+
+} elseif(@$_GET["course"]=="pedsurg") {
+    $src = "./src/pedsurg/";
+    $hide = "?course=pedsurg&amp;hidden=1";
+    $reveal = "?course=pedsurg";
+    $_1Course = "Orthopedics";
+    $_1CourseLink = "?";
+    $_2Course = "Pneumology";
+    $_2CourseLink = "?course=pneumo";
+
 } else {
     $src = "./src/ortho/";
     $hide = "?hidden=1";
     $reveal = "?hidden=0";
-    $otherCourse = "Pneumology";
-    $otherCourseLink = "?course=pneumo";
+    $_1Course = "Pneumology";
+    $_1CourseLink = "?course=pneumo";
+    $_2Course = "Pediatric surgery";
+    $_2CourseLink = "?course=pedsurg";
 }
 
 ?>
@@ -107,7 +121,8 @@ $(document).ready(function() {
             <h4>FETTENAJS X-ray viewer</h4>
             <p style="font-weight: bold;">Please be advised: It may take some time to load this page (65.5 MB).</p>
             
-            <?php echo "<p>Select another course: <a href='".$otherCourseLink."'>".$otherCourse."</a></p>"; ?>
+            <?php echo "<p>Select course: <a href='".$_1CourseLink."'>".$_1Course."</a></p>"; ?>
+            <?php echo "<p>Select course: <a href='".$_2CourseLink."'>".$_2Course."</a></p>"; ?>
             </p>
             <p>PRO TIP #1: Click on the images for zoom and gallery function.</p>
             <?php
